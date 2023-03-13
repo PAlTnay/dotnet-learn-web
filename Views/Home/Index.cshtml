@@ -1,8 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<p>
+    <a asp-action="CreateTicket">CreateTicket</a>
+    <a asp-action="ChangeMovieSession">ChangeMovieSession</a>
+    <a asp-action="AddMovie">AddMovie</a>
+</p>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Current session</h2>
+<h4>Movie:</h4><b>@Model.currentMovie</b>
+<h4>Seats count:</h4><b>@Model.Seats</b>
+<h4>Free seats count:</h4><b>@Model.freeSeats</b>
