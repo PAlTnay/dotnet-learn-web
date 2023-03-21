@@ -1,13 +1,13 @@
-﻿@{
+﻿@model CinemaSpace.Models.Movie
+@{
     ViewData["Title"] = "Create ticket";
 }
 <form asp-action="CreateTicket">
 <div class="form-group">
     <select name="Movie">
-        @foreach (var movie in (ViewData["Movies"] as List<MovieModel>))
+        @foreach (var movie in (ViewData["Movies"] as List<CinemaSpace.Models.Movie>))
         {
-                if (movie.Name == "Empty") continue;
-                <option value="@movie.Name">@movie.Name</option>
+            <option value="@movie">@movie.MovieName</option>
         }
     </select>
 </div>
