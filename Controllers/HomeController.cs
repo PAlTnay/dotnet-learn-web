@@ -41,10 +41,15 @@ namespace CinemaSpace.Controllers
 
         public IActionResult ChangeMovieSession(CinemaSpace.Models.Movie Movie)
         {
-            ViewData["Movies"] = _cinemaModel.GetMovieNames();
+            // Get all movies from the database and display them in a list
+            ViewData["Movies"] =  _cinemaModel.GetMovies().ToList();
+            // Check if the movie is valid
             if (!Cinema.IsValidMovie(Movie))
+                // If the movie is not valid, return the current view
                 return View();
+            // Update the hall movie session
             _cinemaModel.UpdateHallMovieSession(0, Movie.MovieName);
+            // Redirect to the home page
             return RedirectToAction("Index", "Home");
         }
 
