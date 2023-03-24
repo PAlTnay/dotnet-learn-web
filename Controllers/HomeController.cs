@@ -25,11 +25,17 @@ namespace CinemaSpace.Controllers
         }
         public IActionResult CreateTicket(CinemaSpace.Models.Movie Movie)
         {
+            //Get all movies from database
             ViewData["Movies"] = _cinemaModel.GetMovies().ToList();
-            if (Movie == null || Movie.MovieName == null || Movie.MovieName.Trim() == "")
+
+            //Check if the movie is valid
+            if (!Cinema.IsValidMovie(Movie))
                 return View();
+
+            //Add a ticket to the movie
             _cinemaModel.AddTicket(Movie.MovieName);
 
+            //Redirect to the home page
             return RedirectToAction("Index", "Home");
         }
 
@@ -42,12 +48,17 @@ namespace CinemaSpace.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // This function will add a new movie to the cinema model
         public IActionResult AddMovie(CinemaSpace.Models.Movie Movie)
         {
+            // First, we check if the movie is valid
             if (!Cinema.IsValidMovie(Movie))
+                // If the movie is not valid, we return the view
                 return View();
 
+            // If the movie is valid, we add it to the model
             _cinemaModel.AddMovie(Movie.MovieName);
+            // We return to the home page
             return RedirectToAction("Index", "Home");
         }
 
