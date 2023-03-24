@@ -8,7 +8,16 @@ namespace CinemaSpace.Controllers
 {
     public class HomeController : Controller
     {
-        private Cinema _cinemaModel = new Cinema();
+        // Model for the cinema
+        public Cinema CinemaModel {
+            get {
+                if (_cinemaModel is null)
+                    _cinemaModel = new Cinema();
+                return _cinemaModel;
+            }
+        }
+        private static Cinema? _cinemaModel;
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -18,22 +27,22 @@ namespace CinemaSpace.Controllers
 
         public IActionResult Index()
         {
-            ViewData.Model = _cinemaModel;
-            ViewData["Movies"] = _cinemaModel.GetMovieNames();
-            ViewData["Halls"] = _cinemaModel.GetHalls();
+            ViewData.Model = CinemaModel;
+            ViewData["Movies"] = CinemaModel.GetMovieNames();
+            ViewData["Halls"] = CinemaModel.GetHalls();
             return View();
         }
         public IActionResult CreateTicket(CinemaSpace.Models.Movie Movie)
         {
             //Get all movies from database
-            ViewData["Movies"] = _cinemaModel.GetMovies().ToList();
+            ViewData["Movies"] = CinemaModel.GetMovies().ToList();
 
             //Check if the movie is valid
             if (!Cinema.IsValidMovie(Movie))
                 return View();
 
             //Add a ticket to the movie
-            _cinemaModel.AddTicket(Movie.MovieName);
+            CinemaModel.AddTicket(Movie.MovieName);
 
             //Redirect to the home page
             return RedirectToAction("Index", "Home");
@@ -42,13 +51,13 @@ namespace CinemaSpace.Controllers
         public IActionResult ChangeMovieSession(CinemaSpace.Models.Movie Movie)
         {
             // Get all movies from the database and display them in a list
-            ViewData["Movies"] =  _cinemaModel.GetMovies().ToList();
+            ViewData["Movies"] =  CinemaModel.GetMovies().ToList();
             // Check if the movie is valid
             if (!Cinema.IsValidMovie(Movie))
                 // If the movie is not valid, return the current view
                 return View();
             // Update the hall movie session
-            _cinemaModel.UpdateHallMovieSession(0, Movie.MovieName);
+            CinemaModel.UpdateHallMovieSession(0, Movie.MovieName);
             // Redirect to the home page
             return RedirectToAction("Index", "Home");
         }
@@ -62,7 +71,7 @@ namespace CinemaSpace.Controllers
                 return View();
 
             // If the movie is valid, we add it to the model
-            _cinemaModel.AddMovie(Movie.MovieName);
+            CinemaModel.AddMovie(Movie.MovieName);
             // We return to the home page
             return RedirectToAction("Index", "Home");
         }
