@@ -9,7 +9,7 @@ namespace CinemaSpace.Controllers
     public class HomeController : Controller
     {
         // Model for the cinema
-        public Cinema CinemaModel {
+        public static Cinema CinemaModel {
             get {
                 if (_cinemaModel is null)
                     _cinemaModel = new Cinema();
@@ -17,12 +17,13 @@ namespace CinemaSpace.Controllers
             }
         }
         private static Cinema? _cinemaModel;
-
+        public static CinemaSpace.Models.Hall _currentHallView { get; set; } = CinemaModel.GetHalls().FirstOrDefault();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+           
         }
 
         public IActionResult Index()
@@ -30,8 +31,21 @@ namespace CinemaSpace.Controllers
             ViewData.Model = CinemaModel;
             ViewData["Movies"] = CinemaModel.GetMovieNames();
             ViewData["Halls"] = CinemaModel.GetHalls();
+            ViewData["CurrentHallView"] = _currentHallView;
             return View();
         }
+
+        public IActionResult HallView(CinemaSpace.Models.Hall inHall)
+        {
+            ViewData["Halls"] = CinemaModel.GetHalls();
+            ViewData["CurrentHallView"] = _currentHallView;
+            CinemaSpace.Models.Hall? choosenHall = CinemaModel.GetHalls().Find(hall => hall.HallNumber == inHall.HallNumber);
+            if (choosenHall is null)
+                return RedirectToAction("Index", "Home");
+
+            _currentHallView = choosenHall;
+            return RedirectToAction("Index", "Home");
+        }   
         public IActionResult CreateTicket(CinemaSpace.Models.Movie Movie)
         {
             //Get all movies from database

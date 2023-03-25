@@ -1,0 +1,37 @@
+@model CinemaSpace.Models.Hall
+<p> 
+    <form asp-action="HallView">
+        <select asp-for="HallNumber" onchange="this.form.submit();">
+            @foreach (var hall in (ViewData["Halls"] as List<CinemaSpace.Models.Hall>))
+            {
+                <option value="@hall.HallNumber">@hall.HallNumber</option>
+            }
+        </select>
+    </form>
+</p>
+
+@if ( Model != null){
+    var seatsPerRow = 10;
+    var rowsCount = Model.SeatsCount / seatsPerRow;
+
+    for(var i = 0;i < rowsCount; ++i)
+    {
+        for(var j = 0;j < seatsPerRow; ++j)
+        {
+            var seatNumber = i * seatsPerRow + j + 1;
+            if (seatNumber <= Model.FreeSeatsCount)
+            {
+                <a style="color: red">fuck</a>
+            }
+            else{
+                <a style="color: blue">fuck</a>
+            }
+        }
+        <p/>
+    }
+    <h4>Movie:</h4><b>@Model.CurrentMovie.MovieName </b>
+    <h4>Seats count:</h4><b>@Model.SeatsCount</b>
+    <h4>Free seats count:</h4><b>@Model.FreeSeatsCount</b>
+}
+<h2>Current session</h2>
+
