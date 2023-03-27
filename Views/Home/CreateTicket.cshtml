@@ -50,7 +50,7 @@
         } *@
     <p/>
     <h3>Choose seat number: </h3>
-    <input asp-for="SeatNumber" type="number" onchange="this.form.submit();">
+    <input asp-for="SeatNumber" type="number">
     @if(ViewData.ContainsKey("IsSeated") && ((ViewData["IsSeated"] as bool?) == true) ){
         <p style="color: red">Seat is already taken</p>
     }

@@ -32,6 +32,7 @@ namespace CinemaSpace.Controllers
             ViewData["Movies"] = CinemaModel.GetMovieNames();
             ViewData["Halls"] = CinemaModel.GetHalls();
             ViewData["CurrentHallView"] = _currentHallView;
+            ViewData["TakenSeats"] = CinemaModel.GetTakenSeats(_currentHallView.HallNumber);
             return View();
         }
 
@@ -39,6 +40,7 @@ namespace CinemaSpace.Controllers
         {
             ViewData["Halls"] = CinemaModel.GetHalls();
             ViewData["CurrentHallView"] = _currentHallView;
+            ViewData["TakenSeats"] = CinemaModel.GetTakenSeats(inHall.HallNumber);
             CinemaSpace.Models.Hall? choosenHall = CinemaModel.GetHalls().Find(hall => hall.HallNumber == inHall.HallNumber);
             if (choosenHall is null)
                 return RedirectToAction("Index", "Home");
@@ -56,14 +58,15 @@ namespace CinemaSpace.Controllers
             
             ViewData["SelectedHall"] = CinemaModel.GetHalls().Find(hall => hall.HallNumber == ticket.HallNumber);
             ViewData["Halls"] = CinemaModel.GetHalls().FindAll(hall => hall.MovieName == ticket.MovieName);
-
-            if(ticket.SeatNumber == 0 )
-                return View();
             
-            if(!CinemaModel.AddTicket(ticket.MovieName, ticket.HallNumber, ticket.SeatNumber))
-                ViewData["IsSeated"] = true;
+            bool IsSeatAlreadyTaken = false;
+            bool TicketAdded = CinemaModel.AddTicket(ticket.MovieName, ticket.HallNumber, ticket.SeatNumber, out IsSeatAlreadyTaken);
+            
+            if(!TicketAdded)
+            {
+                ViewData["IsSeated"] = IsSeatAlreadyTaken;
                 return View();
-
+            }
             //Redirect to the home page
             return RedirectToAction("Index", "Home");
         }

@@ -13,18 +13,19 @@
 @if ( Model != null){
     var seatsPerRow = 10;
     var rowsCount = Model.SeatsCount / seatsPerRow;
-
+    var takenSeats = ViewData["TakenSeats"] as HashSet<int>;
     for(var i = 0;i < rowsCount; ++i)
     {
         for(var j = 0;j < seatsPerRow; ++j)
         {
             var seatNumber = i * seatsPerRow + j + 1;
-            if (seatNumber <= Model.FreeSeatsCount)
+            if (takenSeats is null || takenSeats.Contains(seatNumber))
             {
-                <a style="color: red">fuck</a>
+                <a style="color: red">@seatNumber</a>
             }
-            else{
-                <a style="color: blue">fuck</a>
+            else
+            {
+                <a style="color: blue">@seatNumber</a>
             }
         }
         <p/>
