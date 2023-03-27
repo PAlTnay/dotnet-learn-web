@@ -1,16 +1,60 @@
-﻿@model CinemaSpace.Models.Movie
+﻿@model CinemaSpace.Models.MovieTicket
 @{
     ViewData["Title"] = "Create ticket";
 }
 <form asp-action="CreateTicket">
 <div class="form-group">
-    <select asp-for="MovieName">
+    <h3>Select movie: </h3>
+    <select asp-for="MovieName" onchange="this.form.submit()">
         @foreach (var movie in (ViewData["Movies"] as List<CinemaSpace.Models.Movie>))
         {
-                if (movie.MovieName == "Empty") continue;
-                <option value="@movie.MovieName">@movie.MovieName</option>
+            if (movie.MovieName == "Empty") continue;
+            <option value="@movie.MovieName">@movie.MovieName</option>
         }
     </select>
+    <p/>
+    
+    @if(ViewData.ContainsKey("Halls") && (ViewData["Halls"] as List<CinemaSpace.Models.Hall>).Count > 0)
+    {
+        <h3>Choose available hall: </h3>
+        <select id="hallsDrop" asp-for="HallNumber" onchange="this.form.submit();">
+            @foreach (var hall in (ViewData["Halls"] as List<CinemaSpace.Models.Hall>))
+            {
+                <option value="@hall.HallNumber">@hall.HallNumber</option>
+            }
+        </select> 
+        <p/>
+         
+         
+        @* CinemaSpace.Models.Hall? selectedHall = ViewData["SelectedHall"] as CinemaSpace.Models.Hall;
+        if(selectedHall != null)
+        {
+            var seatsPerRow = 10;
+            var rowsCount = selectedHall.SeatsCount / seatsPerRow;
+
+            for(var i = 0;i < rowsCount; ++i)
+            {
+                for(var j = 0;j < seatsPerRow; ++j)
+                {
+                    var seatNumber = i * seatsPerRow + j + 1;
+                    if (seatNumber <= selectedHall.FreeSeatsCount)
+                    {
+                        <a style="color: red">@seatNumber</a>
+                    }
+                    else{
+                        <a style="color: blue">@seatNumber</a>
+                    }
+                }
+                <p/>
+            }  
+        } *@
+    <p/>
+    <h3>Choose seat number: </h3>
+    <input asp-for="SeatNumber" type="number" onchange="this.form.submit();">
+    @if(ViewData.ContainsKey("IsSeated") && ((ViewData["IsSeated"] as bool?) == true) ){
+        <p style="color: red">Seat is already taken</p>
+    }
+}
 </div>
 <div class="form-group">
     <input type="submit" value="Create ticket" class="btn btn-primary" />

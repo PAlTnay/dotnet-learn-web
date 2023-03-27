@@ -46,17 +46,23 @@ namespace CinemaSpace.Controllers
             _currentHallView = choosenHall;
             return RedirectToAction("Index", "Home");
         }   
-        public IActionResult CreateTicket(CinemaSpace.Models.Movie Movie)
+        public IActionResult CreateTicket(CinemaSpace.Models.MovieTicket ticket)
         {
             //Get all movies from database
             ViewData["Movies"] = CinemaModel.GetMovies().ToList();
 
-            //Check if the movie is valid
-            if (!Cinema.IsValidMovie(Movie))
+            if(!IsValidName(ticket.MovieName))
                 return View();
+            
+            ViewData["SelectedHall"] = CinemaModel.GetHalls().Find(hall => hall.HallNumber == ticket.HallNumber);
+            ViewData["Halls"] = CinemaModel.GetHalls().FindAll(hall => hall.MovieName == ticket.MovieName);
 
-            //Add a ticket to the movie
-            CinemaModel.AddTicket(Movie.MovieName);
+            if(ticket.SeatNumber == 0 )
+                return View();
+            
+            if(!CinemaModel.AddTicket(ticket.MovieName, ticket.HallNumber, ticket.SeatNumber))
+                ViewData["IsSeated"] = true;
+                return View();
 
             //Redirect to the home page
             return RedirectToAction("Index", "Home");
@@ -100,6 +106,12 @@ namespace CinemaSpace.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        bool IsValidName(string? name)
+        {
+            return name != null && !string.IsNullOrWhiteSpace(name) && name != "Empty";
         }
     }
 }
