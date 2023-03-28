@@ -1,10 +1,28 @@
 @model CinemaSpace.Models.Hall
 <p> 
     <form asp-action="HallView">
+        <h4>Hall: </h4>
         <select asp-for="HallNumber" onchange="this.form.submit();">
             @foreach (var hall in (ViewData["Halls"] as List<CinemaSpace.Models.Hall>))
             {
                 <option value="@hall.HallNumber">@hall.HallNumber</option>
+            }
+        </select>
+        <p/>
+        <h4>Movie: </h4>
+        <select asp-for="MovieName" onchange="this.form.submit();">
+            @foreach (var movie in (ViewData["Movies"] as List<CinemaSpace.Models.Movie>))
+            {
+                if (movie.MovieName == "Empty") continue;
+                bool selected = movie.MovieName == Model.CurrentMovie.MovieName;
+                if (selected)
+                {
+                    <option value="@movie.MovieName" selected>@movie.MovieName</option>
+                }
+                else
+                {
+                    <option value="@movie.MovieName">@movie.MovieName</option>
+                }
             }
         </select>
     </form>
@@ -30,9 +48,5 @@
         }
         <p/>
     }
-    <h4>Movie:</h4><b>@Model.CurrentMovie.MovieName </b>
-    <h4>Seats count:</h4><b>@Model.SeatsCount</b>
-    <h4>Free seats count:</h4><b>@Model.FreeSeatsCount</b>
 }
-<h2>Current session</h2>
 

@@ -2,17 +2,15 @@
 @{
     ViewData["Title"] = "Movie session";
 }
+
 <form asp-action="ChangeMovieSession">
 <div class="form-group">
-    <select asp-for="MovieName">
+    <select asp-for="MovieName" onchange="this.form.submit();">
         @foreach (var movie in (ViewData["Movies"] as List<CinemaSpace.Models.Movie>))
         {
             if (movie.MovieName == "Empty") continue;
             <option value="@movie.MovieName">@movie.MovieName</option>
         }
     </select>
-</div>
-<div class="form-group">
-    <input type="submit" value="Change Movie Session" class="btn btn-primary" />
 </div>
 </form>

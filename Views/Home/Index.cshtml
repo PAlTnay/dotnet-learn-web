@@ -3,8 +3,8 @@
 }
 <p>
     <a asp-action="CreateTicket">CreateTicket</a>
-    <a asp-action="ChangeMovieSession">ChangeMovieSession</a>
     <a asp-action="AddMovie">AddMovie</a>
     <h3>Hall view </h3>
+    
     @await Html.PartialAsync("HallView", ViewData["CurrentHallView"])
 </p>
