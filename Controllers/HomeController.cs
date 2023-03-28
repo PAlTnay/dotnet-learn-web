@@ -78,21 +78,6 @@ namespace CinemaSpace.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult ChangeMovieSession(CinemaSpace.Models.Movie Movie)
-        {
-            ViewData["Halls"] = CinemaModel.GetHalls();
-            // Get all movies from the database and display them in a list
-            ViewData["Movies"] =  CinemaModel.GetMovies().ToList();
-            // Check if the movie is valid
-            if (!Cinema.IsValidMovie(Movie))
-                // If the movie is not valid, return the current view
-                return View();
-            // Update the hall movie session
-            CinemaModel.UpdateHallMovieSession((ViewData["SelectedHall"] as CinemaSpace.Models.Hall).HallNumber, Movie.MovieName);
-            // Redirect to the home page
-            return RedirectToAction("Index", "Home");
-        }
-
         // This function will add a new movie to the cinema model
         public IActionResult AddMovie(CinemaSpace.Models.Movie Movie)
         {
@@ -105,16 +90,6 @@ namespace CinemaSpace.Controllers
             CinemaModel.AddMovie(Movie.MovieName);
             // We return to the home page
             return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult SelectHall(CinemaSpace.Models.Hall hall)
-        {
-            ViewData["Movies"] =  CinemaModel.GetMovies().ToList();
-            ViewData["Halls"] = CinemaModel.GetHalls();
-            // Get all halls from the database and display them in a list
-            ViewData["SelectedHall"] = hall;
-            // Check if the hall is valid
-            return RedirectToAction("ChangeMovieSession");
         }
 
 
